@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "Shader.h"
@@ -58,59 +59,61 @@ int main()
 
 	unsigned int cubeTexture = loadTexture(std::string("./res/textures/marble.jpg").c_str());
 	unsigned int floorTexture = loadTexture(std::string("./res/textures/metal.jpg").c_str());
-	
+	unsigned int grassTexture = loadTexture(std::string("./res/textures/grass.png").c_str());
+	unsigned int windowTexture = loadTexture(std::string("./res/textures/blending_transparent_window.png").c_str());
+
 	Shader m_Shader("./shaderCodeFile/shaderColoor.vs", "./shaderCodeFile/shaderColoor.fs");
-	Shader normalShader("./shaderCodeFile/shaderColoor.vs", "./shaderCodeFile/shaderSingleColoor.fs");
+	Shader alpha_Shader("./shaderCodeFile/shaderColoor.vs", "./shaderCodeFile/shaderColoor.fs");
 
 	//创建一个VBO显示的顶点立方体
 
-	//地板
+	//箱子
 	float cubeVertices[] = {
-		// positions          // texture Coords
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
-
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 1.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-
-		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, -0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, -0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, -0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f, 0.0f, 1.0f,
-
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f,
-		0.5f, 0.5f, -0.5f, 1.0f, 1.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		0.5f, 0.5f, 0.5f, 1.0f, 0.0f,
-		-0.5f, 0.5f, 0.5f, 0.0f, 0.0f,
-		-0.5f, 0.5f, -0.5f, 0.0f, 1.0f
+		// Back face
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // Bottom-left
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f, // bottom-right         
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f, // bottom-left
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
+		// Front face
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f, // top-right
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f, // top-left
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left
+		// Left face
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-left
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-left
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-right
+		// Right face
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right         
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // bottom-right
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // top-left
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-left     
+		// Bottom face
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f, // top-left
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f, // bottom-left
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f, // bottom-right
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f, // top-right
+		// Top face
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f, // top-right     
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f, // bottom-right
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f, // top-left
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f  // bottom-left        
 	};
 
-	//箱子
+	//地板
 	float planeVertices[] = {
 		// positions          // texture Coords (note we set these higher than 1 (together with GL_REPEAT as texture wrapping mode). this will cause the floor texture to repeat)
 		5.0f, -0.5f, 5.0f, 2.0f, 0.0f,
@@ -121,6 +124,20 @@ int main()
 		-5.0f, -0.5f, -5.0f, 0.0f, 2.0f,
 		5.0f, -0.5f, -5.0f, 2.0f, 2.0f
 	};
+
+	//草
+	vector<glm::vec3> vegetation;
+	vegetation.push_back(glm::vec3(-1.5f, 0.0f, -0.48f));
+	vegetation.push_back(glm::vec3(1.5f, 0.0f, 0.51f));
+	vegetation.push_back(glm::vec3(0.0f, 0.0f, 0.7f));
+	vegetation.push_back(glm::vec3(-0.3f, 0.0f, -2.3f));
+	vegetation.push_back(glm::vec3(0.5f, 0.0f, -0.6f));
+
+	vector<glm::vec3> cubevegetation;
+	cubevegetation.push_back(glm::vec3(-1.5f, 0.0f, -1.5f));
+	cubevegetation.push_back(glm::vec3(1.5f, 0.0f, -0.5f));
+
+
 
 	// cube VAO
 	unsigned int cubeVAO, cubeVBO;
@@ -141,6 +158,18 @@ int main()
 	glBindVertexArray(planeVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, planeVBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(planeVertices), &planeVertices, GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glBindVertexArray(0);
+	//grass
+	unsigned int grassVAO, grassVBO;
+	glGenVertexArrays(1, &grassVAO);
+	glGenBuffers(1, &grassVBO);
+	glBindVertexArray(grassVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), &cubeVertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(1);
@@ -170,6 +199,15 @@ int main()
 	//模板测试/深度测试/深度测试模板测试 通过时
 	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 
+	glEnable(GL_BLEND);	//启用混合
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	//背面剔除
+	glEnable(GL_CULL_FACE);
+
+	glFrontFace(GL_CW);
+	glCullFace(GL_BACK);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
@@ -181,20 +219,20 @@ int main()
 		glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 		
-		// set uniforms
-		normalShader.use();
 		glm::mat4 model = glm::mat4(1.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
-		normalShader.setMat4("view", view);
-		normalShader.setMat4("projection", projection);
+
+		//// set uniforms
+		//normalShader.use();
+//normalShader.setMat4("view", view);
+		//normalShader.setMat4("projection", projection);
 
 		m_Shader.use();
 		m_Shader.setMat4("view", view);
 		m_Shader.setMat4("projection", projection);
 
-		// draw floor as normal, but don't write the floor to the stencil buffer, we only care about the containers. We set its mask to 0x00 to not write to the stencil buffer.
-		glStencilMask(0x00);
+		//glStencilMask(0x00);
 		// floor
 		glBindVertexArray(planeVAO);
 		glBindTexture(GL_TEXTURE_2D, floorTexture);
@@ -202,47 +240,46 @@ int main()
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 
-		// 1st. render pass, draw objects as normal, writing to the stencil buffer
-		// --------------------------------------------------------------------
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
+		//glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		//glStencilMask(0xFF);
 		// cubes
 		glBindVertexArray(cubeVAO);
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, cubeTexture);
-		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-		m_Shader.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
-		m_Shader.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
 
-		// 2nd. render pass: now draw slightly scaled versions of the objects, this time disabling stencil writing.
-		// Because the stencil buffer is now filled with several 1s. The parts of the buffer that are 1 are not drawn, thus only drawing 
-		// the objects' size differences, making it look like borders.
-		// -----------------------------------------------------------------------------------------------------------------------------
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
-		normalShader.use();
-		float scale = 1.1;
-		// cubes
-		glBindVertexArray(cubeVAO);
-		glBindTexture(GL_TEXTURE_2D, cubeTexture);
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(-1.0f, 0.0f, -1.0f));
-		model = glm::scale(model, glm::vec3(scale, scale, scale));
-		normalShader.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
-		model = glm::mat4(1.0f);
-		model = glm::translate(model, glm::vec3(2.0f, 0.0f, 0.0f));
-		model = glm::scale(model, glm::vec3(scale, scale, scale));
-		normalShader.setMat4("model", model);
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		for (int i = 0; i < cubevegetation.size(); i++)
+		{
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, cubevegetation[i]);
+			m_Shader.setMat4("model", model);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 		glBindVertexArray(0);
-		glStencilMask(0xFF);
-		glEnable(GL_DEPTH_TEST);
+
+
+		std::map<float, glm::vec3> sorted;
+		for (unsigned int i = 0; i < vegetation.size(); i++)
+		{
+			float distance = glm::length(camera.Position - vegetation[i]);
+			sorted[distance] = vegetation[i];
+		}
+
+		//grasss
+		alpha_Shader.use();
+		alpha_Shader.setMat4("view", view);
+		alpha_Shader.setMat4("projection", projection);
+		glBindVertexArray(grassVAO);
+		glBindTexture(GL_TEXTURE_2D, windowTexture);
+		for (std::map<float, glm::vec3>::reverse_iterator it = sorted.rbegin(); it != sorted.rend(); ++it)
+		{
+			model = glm::mat4(1.0f);
+			model = glm::translate(model, it->second);
+			alpha_Shader.setMat4("model", model);
+			glDrawArrays(GL_TRIANGLES, 0, 6);
+		}
+
+		glBindVertexArray(0);
+
 
 		//交换缓冲与查询IO
 		glfwSwapBuffers(window);
@@ -309,23 +346,29 @@ unsigned int loadTexture(char const * path)
 	glGenTextures(1, &textureID);
 
 	int width, height, nrComponents;
+	stbi_set_flip_vertically_on_load(true);
 	unsigned char *data = stbi_load(path, &width, &height, &nrComponents, 0);
 	if (data)
 	{
 		GLenum format;
 		if (nrComponents == 1)
+		{
 			format = GL_RED;
+		}
 		else if (nrComponents == 3)
+		{
 			format = GL_RGB;
+		}
 		else if (nrComponents == 4)
+		{
 			format = GL_RGBA;
-
+		}
 		glBindTexture(GL_TEXTURE_2D, textureID);
 		glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT); // for this tutorial: use GL_CLAMP_TO_EDGE to prevent semi-transparent borders. Due to interpolation it takes texels from next repeat 
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
