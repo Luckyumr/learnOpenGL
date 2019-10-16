@@ -1,0 +1,28 @@
+﻿生成启动时间为 2019/10/16 星期三 13:46:06。
+     1>项目“D:\wangsiwei\opengl\openglight\openglight\openglight.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt main.cpp
+         main.cpp
+     1>d:\wangsiwei\opengl\openglight\openglight\main.cpp(175): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+     1>d:\wangsiwei\opengl\openglight\openglight\main.cpp(229): warning C4305: “初始化”: 从“double”到“float”截断
+     1>d:\wangsiwei\opengl\openglight\openglight\main.cpp(288): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>d:\wangsiwei\opengl\openglight\openglight\main.cpp(289): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>d:\wangsiwei\opengl\openglight\openglight\main.cpp(293): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+     1>d:\wangsiwei\opengl\openglight\openglight\main.cpp(294): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+     1>d:\wangsiwei\opengl\openglight\openglight\main.cpp(296): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>d:\wangsiwei\opengl\openglight\openglight\main.cpp(297): warning C4244: “=”: 从“double”转换到“float”，可能丢失数据
+     1>d:\wangsiwei\opengl\openglight\openglight\main.cpp(303): warning C4244: “参数”: 从“double”转换到“float”，可能丢失数据
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\wangsiwei\opengl\openglight\Debug\openglight.exe" /INCREMENTAL /NOLOGO glfw3.lib opengl32.lib "assimp-vc120-mt.lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\wangsiwei\opengl\openglight\Debug\openglight.pdb" /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\wangsiwei\opengl\openglight\Debug\openglight.lib" /MACHINE:X86 Debug\Camera.obj
+         Debug\glad.obj
+         Debug\Mesh.obj
+         Debug\Model.obj
+         Debug\Shader.obj
+         Debug\stb_image.obj
+         Debug\main.obj
+         openglight.vcxproj -> D:\wangsiwei\opengl\openglight\Debug\openglight.exe
+     1>已完成生成项目“D:\wangsiwei\opengl\openglight\openglight\openglight.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:00.74
